@@ -1,0 +1,76 @@
+<script type="text/javascript">
+	let playlisters = ["Pol","Sergio","Oscar","Riki"];
+	let balancers = ["Sasha","Artur","Sito","Javi","Diego","Ignasi"];
+	let onboarders = ["Diego","Joan","Jaume","Moi"];
+	let mtxers = ["Bernat"];
+	let leads = ["Teresa"];
+	let QC = [playlisters, balancers, onboarders, mtxers];
+	let colors = ["#76BDEF","#F2608A","#FCA863","#E6C229"];	
+	let fontColors = ["#000","#000","#000","#000"];
+	
+	var container = document.createElement("div");
+
+	var Randomize = function(array, element){
+		var a = array.length;
+		while(a > 0){
+			var rand = Math.floor(Math.random()*a);
+
+			var label = document.createElement("span");
+			label.innerHTML="- " + array[rand] +"<br>";
+			element.appendChild(label);
+
+			array.push(array.splice( rand, 1 )[0]);
+			a--;
+		}
+		container.appendChild(element);
+	};
+	function RandomizeDaily(){
+		var a = QC.length;
+		container.innerHTML = "";
+		while(a > 0){
+			var rand = Math.floor(Math.random()*a);
+			var cellContainer = document.createElement("div");
+			cellContainer.style = "background-color:"+colors[a-1]+";color:"+fontColors[a-1]+";";
+			Randomize(QC[rand],cellContainer);
+			QC.push(QC.splice( rand, 1 )[0]);
+			a--;
+		}
+
+		var leadContainer = document.createElement("div");
+		leadContainer.style = "background-color:#A471F8;color:#FFFFFF;";
+		var labelT = document.createElement("span");
+		labelT.innerHTML="- " + leads[0] +"<br>";
+		leadContainer.appendChild(labelT);
+		container.appendChild(leadContainer);
+
+		let body = document.getElementsByTagName("body")[0];
+		var divElement = document.getElementById("container");
+		if (divElement!=undefined) divElement.parentNode.removeChild(divElement);
+		container.id = "container"; 
+		body.appendChild(container);
+		console.log(balancers);
+	}
+	function CopyToClipboard(containerid) {
+	  if (document.selection) {
+		var range = document.body.createTextRange();
+		range.moveToElementText(document.getElementById(containerid));
+		range.select().createTextRange();
+		document.execCommand("copy");
+	  } else if (window.getSelection) {
+		var range = document.createRange();
+		range.selectNode(document.getElementById(containerid));
+		window.getSelection().addRange(range);
+		document.execCommand("copy");
+	  }
+	}
+</script>
+<style type="text/css">
+	span{
+		display: block;
+	}
+</style>
+
+	<button onclick="RandomizeDaily()">Randomize</button> <button onclick="CopyToClipboard('container')">Copy</button>
+	<br><div id="container"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></div>
+<script type="text/javascript">RandomizeDaily();</script>
+
