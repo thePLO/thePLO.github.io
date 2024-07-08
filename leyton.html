@@ -1,0 +1,180 @@
+<style>
+/* CSS */
+body{
+   text-align: center;
+   overflow: hidden;
+}
+.button-49,
+.button-49:after {
+-webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+text-align: center;
+   text-decoration: none;
+   color: initial;
+  width: 150px;
+  height: 76px;
+  line-height: 78px;
+  font-size: 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  background: linear-gradient(45deg, transparent 5%, #FF013C 5%);
+  border: 0;
+  color: #fff;
+  letter-spacing: 3px;
+  box-shadow: 6px 0px 0px #00E6F6;
+  outline: transparent;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-49:after {
+  --slice-0: inset(50% 50% 50% 50%);
+  --slice-1: inset(80% -6px 0 0);
+  --slice-2: inset(50% -6px 30% 0);
+  --slice-3: inset(10% -6px 85% 0);
+  --slice-4: inset(40% -6px 43% 0);
+  --slice-5: inset(80% -6px 5% 0);
+  
+  content: 'LEYTON';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 3%, #00E6F6 3%, #00E6F6 5%, #FF013C 5%);
+  text-shadow: -3px -3px 0px #F8F005, 3px 3px 0px #00E6F6;
+  clip-path: var(--slice-0);
+}
+
+.button-49:hover:after {
+  animation: 1s glitch;
+  animation-timing-function: steps(2, end);
+}
+
+@keyframes glitch {
+  0% {
+    clip-path: var(--slice-1);
+    transform: translate(-20px, -10px);
+  }
+  10% {
+    clip-path: var(--slice-3);
+    transform: translate(10px, 10px);
+  }
+  20% {
+    clip-path: var(--slice-1);
+    transform: translate(-10px, 10px);
+  }
+  30% {
+    clip-path: var(--slice-3);
+    transform: translate(0px, 5px);
+  }
+  40% {
+    clip-path: var(--slice-2);
+    transform: translate(-5px, 0px);
+  }
+  50% {
+    clip-path: var(--slice-3);
+    transform: translate(5px, 0px);
+  }
+  60% {
+    clip-path: var(--slice-4);
+    transform: translate(5px, 10px);
+  }
+  70% {
+    clip-path: var(--slice-2);
+    transform: translate(-10px, 10px);
+  }
+  80% {
+    clip-path: var(--slice-5);
+    transform: translate(20px, -10px);
+  }
+  90% {
+    clip-path: var(--slice-1);
+    transform: translate(-10px, 0px);
+  }
+  100% {
+    clip-path: var(--slice-1);
+    transform: translate(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .button-49,
+  .button-49:after {
+    width: 200px;
+    height: 86px;
+    line-height: 88px;
+  }
+}
+</style>
+<script>
+	var mail = 0;
+	var year = 2020;
+	var month = 0;
+	function updateQuery(){
+		mail = document.getElementById('mailInput').value;
+		year = document.getElementById('yearInput').value;
+		month = document.getElementById('monthInput').value;
+    textArea = document.getElementById('toLeyton');
+    textArea = document.getElementById('toLeyton');
+		
+		var lastDay = new Date(parseInt(year), parseInt(month) +1, 0).getDate();
+		var stringMonth = parseInt(month)+1;
+
+    /*var stringQuery = "?jql=((%27Sub%20Tested%20By%27%20%3D%20currentUser()%20AND%20(createdDate%20%3E%3D%20" + year + "-" + stringMonth + "-1%20AND%20createdDate%20%3C%3D%20" + year + "-" + stringMonth + "-" + lastDay + ")))%20OR%0A(issuetype%20in%20(%27QC%20Task%27%2C%20Task)%20AND%20(assignee%20%3D%20currentUser()%20OR%20reporter%20%3D%20currentUser())%20AND%20(status%20changed%20by%20currentUser()%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")))%20OR%0A(issuetype%20%3D%20%27Bug%20QC%27%20AND%20((reporter%20%3D%20currentUser()%20AND%09(createdDate%20>%3D%20" + year + "-" + stringMonth + "-1%20AND%20createdDate%20<%3D%20" + year + "-" + stringMonth + "-" + lastDay + "))%20OR%20status%20changed%20by%20currentUser()%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")))%20OR%20%0A((issuetype%20%3D%20MTX%20OR%20issuetype%20%3D%20%27MTX%20Sub-Task%27)%20AND%20(assignee%20was%20currentUser()%20OR%20assignee%20%3D%20currentUser())%09AND%20(status%20changed%20from%20%27In-Engine%20Validation%27%20to%20Retake%20by%20currentUser()%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")%20OR%20status%20changed%20from%20%27In-Engine%20Validation%27%20to%20%27Finalize%20Name%27%20by%20currentUser()%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")))%0AORDER%20BY%20updated%20DESC";*/
+    var stringQuery = "?jql=((%27Sub%20Tested%20By%27%20%3D%20'" + mail + "@ubisoft.com'%20AND%20(createdDate%20%3E%3D%20" + year + "-" + stringMonth + "-1%20AND%20createdDate%20%3C%3D%20" + year + "-" + stringMonth + "-" + lastDay + ")))%20OR%0A(issuetype%20in%20(%27QC%20Task%27%2C%20Task)%20AND%20(assignee%20%3D%20'" + mail + "@ubisoft.com'%20OR%20reporter%20%3D%20'" + mail + "@ubisoft.com')%20AND%20(status%20changed%20by%20'" + mail + "@ubisoft.com'%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")))%20OR%0A(issuetype%20%3D%20%27Bug%20QC%27%20AND%20((reporter%20%3D%20'" + mail + "@ubisoft.com'%20AND%09(createdDate%20>%3D%20" + year + "-" + stringMonth + "-1%20AND%20createdDate%20<%3D%20" + year + "-" + stringMonth + "-" + lastDay + "))%20OR%20status%20changed%20by%20'" + mail + "@ubisoft.com'%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")))%20OR%20%0A((issuetype%20%3D%20MTX%20OR%20issuetype%20%3D%20%27MTX%20Sub-Task%27)%20AND%20(assignee%20was%20'" + mail + "@ubisoft.com'%20OR%20assignee%20%3D%20'" + mail + "@ubisoft.com')%09AND%20(status%20changed%20from%20%27In-Engine%20Validation%27%20to%20Retake%20by%20'" + mail + "@ubisoft.com'%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")%20OR%20status%20changed%20from%20%27In-Engine%20Validation%27%20to%20%27Finalize%20Name%27%20by%20'" + mail + "@ubisoft.com'%20during%20(" + year + "-" + stringMonth + "-1%2C%20" + year + "-" + stringMonth + "-" + lastDay + ")))%0AORDER%20BY%20updated%20DESC";
+    
+    var stringToCopy = "(('Sub Tested By' = '" + mail + "@ubisoft.com' AND (createdDate >= " + year + "-" + stringMonth + "-1 AND createdDate <= " + year + "-" + stringMonth + "-" + lastDay + "))) OR (issuetype in ('QC Task', Task) AND (assignee = '" + mail + "@ubisoft.com' OR reporter = '" + mail + "@ubisoft.com') AND (status changed by '" + mail + "@ubisoft.com' during (" + year + "-" + stringMonth + "-1, " + year + "-" + stringMonth + "-" + lastDay + "))) OR (issuetype = 'Bug QC' AND ((reporter = '" + mail + "@ubisoft.com' AND  (createdDate >= " + year + "-" + stringMonth + "-1 AND createdDate <= " + year + "-" + stringMonth + "-" + lastDay + ")) OR status changed by '" + mail + "@ubisoft.com' during (" + year + "-" + stringMonth + "-1, " + year + "-" + stringMonth + "-" + lastDay + "))) OR ((issuetype = MTX OR issuetype = 'MTX Sub-Task') AND (assignee was '" + mail + "@ubisoft.com' OR assignee = '" + mail + "@ubisoft.com') AND (status changed from 'In-Engine Validation' to Retake by '" + mail + "@ubisoft.com' during (" + year + "-" + stringMonth + "-1, " + year + "-" + stringMonth + "-" + lastDay + ") OR status changed from 'In-Engine Validation' to 'Finalize Name' by '" + mail + "@ubisoft.com' during (" + year + "-" + stringMonth + "-1, " + year + "-" + stringMonth + "-" + lastDay + "))) ORDER BY updated DESC";
+
+		document.getElementById('link').setAttribute('href', "https://mdc-tomcat-jira25.ubisoft.org/jira/issues/"+stringQuery);
+    textArea.value = stringToCopy;
+  }
+
+  function copyCB(event) {
+    var copyTextarea = document.getElementById('toLeyton');
+    copyTextarea.focus();
+    copyTextarea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Copying text command was ' + msg);
+    } catch (err) {
+      console.log('Oops, unable to copy');
+    }
+  };
+
+
+</script>
+<br>
+Month: <select name="month" id="monthInput" onchange="updateQuery()">
+	  <option value="0">Jan</option>
+	  <option value="1">Feb</option>
+	  <option value="2">Mar</option>
+	  <option value="3">Apr</option>
+	  <option value="4">May</option>
+	  <option value="5">Jun</option>
+	  <option value="6">Jul</option>
+	  <option value="7">Aug</option>
+	  <option value="8">Sep</option>
+	  <option value="9">Oct</option>
+	  <option value="10">Nov</option>
+	  <option value="11">Dec</option>
+</select> Year: <input type="text" name="year" id="yearInput" style="width:50px;" value="2024" onchange="updateQuery()"><br>
+<input type="text" name="mail" id="mailInput" value="yves.guillemot" onchange="updateQuery()" style="width:150px;">@ubisoft.com
+<br><br>
+<div style="padding: 5px; background: lightgray;">
+  <textarea id="toLeyton"></textarea><br>
+  <button class="js-textareacopybtn" style="vertical-align:top;" onclick="copyCB();">Copy query for Leyton</button>
+</div>
+<br>
+
+<a rel="nofollow" id="link" href="#" class="button-49" target="_blank">See in Jira</a>
+<br><br>
+<a href="https://rdmreport.ubisoft.org/reports" class="button-49" target="blank">RDM Tool</a><br>
+<script>
+	updateQuery();
+</script>
