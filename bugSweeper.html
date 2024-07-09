@@ -1,0 +1,339 @@
+	<style>
+		/**{
+			margin: auto;
+			padding: 0;
+		}*/
+		.sweeperDIV{
+			padding:7px;
+			text-align: center;
+		}
+		.sweeperCell{
+			background-color: lightgrey;
+			width: 20px;
+			height: 20px;
+			
+		}
+		.sweeperTable{
+			margin: auto;
+			padding: 3px;
+		}
+		.sweeperCell:hover{
+			background-color: darkgrey;
+		}
+		.sweeperCell:disabled,	button[disabled]{
+			border: 1px solid #999999;
+			background-color: white;
+			color: #666666;
+		}
+		.title{
+			text-align: center;
+			padding:10px;
+			font-size: 24px;
+		}
+	</style>
+	<script type="text/javascript">
+		var gameData;
+		var lastA;
+		var gameOver = false;
+		var win = false;
+		var timerStarted = false;
+		var nMines = 0;
+		
+		
+		var Cell = function(_n, _x, _y){
+			this.value = _n;
+			this.x = _x;
+			this.y = _y;
+			this.element;
+			this.revealed = false;
+			this.flagged = false;
+			this. neighbors = new Array();
+			this.setValue = function(nn){
+				this.value = nn;
+			}
+			this.setElement = function(htmlElement){
+				this.element = htmlElement;
+			}
+			this.flag = function(){
+				if(!gameOver){
+					this.flagged = !this.flagged;
+					if (this.flagged) this.element.innerHTML = "&#9873";//"&#215";
+					else this.element.innerHTML = "";
+				}
+			}
+			this.reveal = function (){
+				if (!this.flagged && !gameOver){
+					this.revealed = true;
+					//console.log(this.x, this.y, lastA);
+					this.element.disabled=true;
+					if (this.value == 0) this.element.innerHTML = " ";
+					else if (this.value == -1) this.element.innerHTML = "&#9788";
+					else this.element.innerHTML = this.value;
+					if (this.value == -1) this.element.style = "font-weight: bold;";
+					else{
+						if (this.value == 1) this.element.style = "color: blue;";
+						if (this.value == 2) this.element.style = "color: green;";
+						if (this.value == 3) this.element.style = "color: red;";
+						if (this.value == 4) this.element.style = "color: purple;";
+						if (this.value == 5) this.element.style = "color: maroon;";
+						if (this.value == 6) this.element.style = "color: turquoise;";
+						if (this.value == 7) this.element.style = "color: black;";
+						if (this.value == 8) this.element.style = "color: gray;";
+					}
+					
+					if(this.value == -1){
+						console.log("GameOver!");
+						gameOver = true;
+						document.getElementById("result").innerHTML = ":(";
+						for (var j = 0; j < lastA; j++) {
+							for (var i = 0; i < lastA; i++) {
+								if (gameData[j][i].value == -1){
+									gameData[j][i].element.innerHTML = "&#9788";
+									gameData[j][i].element.disabled = true;
+									if (gameData[j][i].flagged) gameData[j][i].element.style = "background-color: green; color:white;";
+									else gameData[j][i].element.style = "background-color: red; color:white;";
+								}
+							}
+						}
+					}
+					else if(this.value == 0){
+						this.propagateEmptyness();
+					}
+				}
+			}
+			this.propagateEmptyness = function (){
+				if(this.x>0) {
+					if(!gameData[this.x-1][this.y].element.disabled){
+						gameData[this.x-1][this.y].reveal();
+					}
+					if(this.y>0){
+						if(!gameData[this.x-1][this.y-1].element.disabled) gameData[this.x-1][this.y-1].reveal();
+					}
+					if(this.y<lastA-1){
+						if(!gameData[this.x-1][this.y+1].element.disabled) gameData[this.x-1][this.y+1].reveal();
+					}
+				}
+				if(this.x<lastA-1) {
+					if(!gameData[this.x+1][this.y].element.disabled){
+						gameData[this.x+1][this.y].reveal();
+					}
+					if(this.y>0){
+						if(!gameData[this.x+1][this.y-1].element.disabled) gameData[this.x+1][this.y-1].reveal();
+					}
+					if(this.y<lastA-1){
+						if(!gameData[this.x+1][this.y+1].element.disabled) gameData[this.x+1][this.y+1].reveal();
+					}
+				}
+				if(this.y>0) {
+					if(!gameData[this.x][this.y-1].element.disabled){
+						gameData[this.x][this.y-1].reveal();
+					}
+				}
+				if(this.y<lastA-1) {
+					if(!gameData[this.x][this.y+1].element.disabled){
+						gameData[this.x][this.y+1].reveal();
+					}
+				}
+			}
+		};
+		
+		var millis = 0;
+		function GameTimer() {
+			var seconds = millis/1000;
+			var minutes = Math.round(seconds / 60);
+			var remainingSeconds = parseInt(seconds % 60);
+			if (remainingSeconds < 10) {
+				remainingSeconds = "0" + remainingSeconds;
+			}
+			document.getElementById('timer').innerHTML = minutes + ":" + remainingSeconds;
+			if (gameOver) {
+				clearInterval(countdownTimer); // Clear the interval to stop the loop
+				timerStarted = false;
+			}
+			else{
+				millis+=100;
+			}
+		}
+		function StartTimer(){
+			timerStarted = true;
+			countdownTimer = setInterval(GameTimer, 100);			
+		}
+		
+		function Win(){
+			gameOver = true;
+			win = true;
+			document.getElementById("result").innerHTML = ":)";
+			for (var j = 0; j < lastA; j++) {
+				for (var i = 0; i < lastA; i++) {
+					if (gameData[j][i].value == -1){
+						gameData[j][i].element.innerHTML = "&#9873";
+						gameData[j][i].flagged = "&#9873";
+					}
+					gameData[j][i].element.disabled = true;
+					if (gameData[j][i].flagged) gameData[j][i].element.style = "background-color: green; color:white;";
+				}
+			}
+			//console.log("WIN!");
+		}
+		
+		function generateTable(a){
+			document.getElementById("result").innerHTML = ":|";
+			gameOver = false;
+			win = false;
+			if(timerStarted) clearInterval(countdownTimer);
+			timerStarted = false;
+			document.getElementById('timer').innerHTML = "0:00";
+			millis = 0;
+			lastA = a;
+			gameData = new Array();
+			
+			for (var j = 0; j < a; j++) {
+				gameData[j] = new Array();
+				for (var i = 0; i < a; i++) {
+					gameData[j][i] = new Cell(0, j, i);
+				}
+			}
+			
+			var k = 0;
+			var dificulty = document.getElementById("mines").value/100;
+			nMines = (a*a)*dificulty; 
+			document.getElementById("nMines").innerHTML = nMines;
+			document.getElementById("flags").innerHTML = "0";
+			
+			while (k<(a*a)*dificulty){
+				var x = parseInt(Math.random() * a);
+				var y = parseInt(Math.random() * a);
+				
+				if(gameData[x][y].value == 0){
+					gameData[x][y].setValue(-1);
+					k++;
+				}
+			}
+			
+			for (var j = 0; j < a; j++) {
+				for (var i = 0; i < a; i++) {
+					if (gameData[j][i].value != -1){
+						var hood = 0;
+						if(j>0){
+							if (gameData[j-1][i].value == -1) hood++;
+							if(i>0){
+								if (gameData[j-1][i-1].value == -1) hood++;
+							}if(i<a-1){
+								if (gameData[j-1][i+1].value == -1) hood++;
+							}
+						}
+						if(j<a-1){
+							if (gameData[j+1][i].value == -1) hood++;
+							if(i>0){
+								if (gameData[j+1][i-1].value == -1) hood++;
+							}if(i<a-1){
+								if (gameData[j+1][i+1].value == -1) hood++;
+							}
+						}
+						if(i>0) if(gameData[j][i-1].value == -1) hood++;
+						if(i<a-1) if(gameData[j][i+1].value == -1) hood++;
+						gameData[j][i].setValue(hood);
+					}
+				}
+			}
+			
+			var pg = document.getElementById("playground");
+			pg.innerHTML = "";		
+			var tbl = document.createElement("table");
+			var tblBody = document.createElement("tbody");	
+			
+			for (var j = 0; j < a; j++) {
+				var row = document.createElement("tr");
+				row.className = "sweeperTable";
+				for (var i = 0; i < a; i++) {
+					var cell = document.createElement("td");
+					cell.className = "sweeperTable";
+					var btn = document.createElement("BUTTON");
+					btn.value = gameData[j][i].value;
+					btn.className = "sweeperCell";
+					btn.onContextMenu = function(){return false;};
+					btn.onmouseup = function(){
+						var substrIndex = 1;
+						
+						var stringX = "";
+						var stringXBool = true;
+						while (stringXBool){
+							var string = this.id.substr(substrIndex, 1);
+							if (string != ",") stringX += string;
+							else stringXBool = false;
+							substrIndex++;
+						}
+						var x = parseInt(stringX);
+						var y = parseInt(this.id.substr(substrIndex));
+						
+						if(!timerStarted) StartTimer();
+						
+						if (event.which == 3) {
+							gameData[x][y].flag();
+						}
+						else{
+							gameData[x][y].reveal();
+							//console.log(this.id);
+						}
+						
+						var notDiscovered = 0;
+						var flaggedTiles = 0;
+						for (var j = 0; j < lastA; j++) {
+							for (var i = 0; i < lastA; i++) {
+								if (!gameData[j][i].revealed){
+									notDiscovered++;
+								}
+								if(gameData[j][i].flagged) flaggedTiles++;
+							}
+						}
+						document.getElementById("flags").innerHTML = flaggedTiles;
+						if (notDiscovered<=nMines && !gameOver) Win();
+						
+					};
+					
+					btn.id = "#" + j + "," + i;
+					gameData[j][i].setElement(btn);
+					
+					cell.appendChild(btn);
+					row.appendChild(cell);
+				}
+				tblBody.appendChild(row);
+			}
+			tbl.appendChild(tblBody);
+			pg.appendChild(tbl);
+			tbl.setAttribute("border", "5");
+		}		
+		
+	</script>
+	
+		<div class="sweeperDIV">
+			<button onclick="generateTable(10)">ReStart</button>
+			<select id="mines">
+				<option value="10">10%</option>
+				<option value="15">15%</option>
+				<option value="20">20%</option>
+				<option value="30">30%</option>
+				<option value="50">50%</option>
+				<option value="99">BernatMode</option>
+			</select>
+		</div>
+		<div class="sweeperDIV" id="playground" oncontextmenu="return false;">
+			<br><br><br><br><br><br><br><br><br><br><br><br><br>
+		</div>
+		<div class="sweeperDIV">
+			<table width="100%">
+				<tbody><tr>
+					<td>Mines:</td>
+					<td id="nMines"></td>
+					<td rowspan="2" class="title" id="timer"> 0:00</td>
+					<td rowspan="2" class="title" id="result"> :|</td>
+				</tr>
+				<tr>
+					<td>Flagged:</td>
+					<td id="flags">0</td>
+				</tr>
+			</tbody></table>
+		</div>
+
+<script type="text/javascript">generateTable(10);</script>
+	
